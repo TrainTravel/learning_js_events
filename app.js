@@ -1,36 +1,22 @@
 const EventEmitter = require('events');
-const eventConfig = require('./config').events;
-//const EventEmitter = require('./emitter'); 
+const util = require('util');
 
-class MyEmitter extends EventEmitter {}
+function Greetr() {
+    EventEmitter.call(this);
+    this.greeting = 'Hello World!';
+}
 
-//const myEmitter = new MyEmitter();
-//myEmitter.on('event', () => {
-//  console.log('an event occurred!');
-//});
-//myEmitter.emit('event');
+util.inherits(Greetr, EventEmitter);
 
-//const emitter = myEmitter.on('event', function(a, b) {
-//  console.log(a, b, this, this === myEmitter);
-//  // Prints:
-//  //   a b MyEmitter {
-//  //     domain: null,
-//  //     _events: { event: [Function] },
-//  //     _eventsCount: 1,
-//  //     _maxListeners: undefined } true
-//});
+Greetr.prototype.greet = function(data) {
+    console.log(this.greeting + ':' + data);
+    this.emit('greet', data);
+}
 
-//console.log(emitter);
-//myEmitter.emit('event', 'a', 'b');
-const emtr = new MyEmitter();
+const greeter1 = new Greetr();
 
-emtr.on(eventConfig.GREET, function() {
-    console.log('Someone said hello.');
+greeter1.on('greet', function(data) {
+    console.log('Someone greeted!');  
 })
 
-emtr.on(eventConfig.GREET, function() {
-    console.log('A greeting occurred');
-})
-
-console.log('Hello');
-emtr.emit('greet');
+greeter1.greet('Jane');
